@@ -5,7 +5,7 @@ pipeline {
     stage('Checkout') {
       steps {
         // Checkout code from GitHub repository
-        git branch: 'main', url: 'git@github.com:rajakondepudi/mock-premium-calculator.git'
+        git branch: 'main', url: 'https://github.com/rajakondepudi/mock-premium-calculator.git'
       }
     }
     
