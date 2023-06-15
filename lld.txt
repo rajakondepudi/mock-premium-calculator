@@ -1,0 +1,145 @@
+productPremiumRequest = {
+	"SI":100000,
+	"policyType": "INDIVIDUAL",
+  	"cityType": "TIER_1",
+	"premiumForAges:[6,8,42,35]
+}
+productPremiumResponse = [
+	{
+		"age":6,
+		"premium":4751
+	},
+	{
+		"age":8,
+		"premium":4751
+	},
+	{
+		"age":42,
+		"premium":8039
+	},
+	{
+		"age":35,
+		"premium":6429
+	}
+]
+class ProductPremium:
+	//constructor
+	function __init__(productPremiumRequest:ProductPremiumRequest):
+		self.productPremiumRequest = productPremiumRequest
+	function setPremium($premium):
+		// code to perform set product premium logic
+	function getPremiumResponse():
+		// return the productPremiumResponse
+
+
+discountProductPremiumRequest = {
+	"SI":100000,
+	"policyType": "INDIVIDUAL",
+  	"cityType": "TIER_1",
+	"tenure":2,
+	"memberDetails":[
+		{
+      			"age": 42,
+      			"relation": "SELF",
+			"isEmployee":true
+    		},
+		{
+      			"age": 38,
+      			"relation": "WIFE"
+    		}
+	]
+}
+discountProductPremiumResponse = {
+	"discounts":{
+		"family discount":10 //  discountName:discountPercentage
+		"online discount":5
+	},
+	"memberDetails":[
+		{
+      			"age": 42,
+      			"relation": "SELF",
+				"discounts":{
+                    
+                }
+    	},
+		{
+      			"age": 38,
+      			"relation": "WIFE",
+				"discounts":{}
+    	}
+	]	
+}
+class DiscountOnProductPremium:
+	//constructor
+	function __init__(discountProductPremiumRequest:DiscountProductPremiumRequest):
+		self.discountProductPremiumRequest = discountProductPremiumRequest
+	function setGrossPremiumDiscount($discountName, $percentage):
+		// code to perform set product gross premium discount
+	function setInsuredPersonDiscount($percentage):
+		// code to perform set insured person discount
+	function getDiscountResponse():
+		// return the discountProductPremiumResponse
+
+	
+
+
+premiumCalculatorRequest = {
+  "product": "Optima Restore",
+  "policyType": "INDIVIDUAL",
+  "cityType": "TIER_1",
+  "sumInsured": 100000,
+  "tenure": 2,
+  "isOnline": true,
+  "primaryInsured": {
+    "age": 45,
+    "isEmployee": true
+  },
+  "memberDetails": [
+    {
+      "age": 42,
+      "relation": "WIFE"
+    },
+    {
+      "age": 08,
+      "relation": "SON"
+    },
+    {
+      "age": 06,
+      "relation": "DAUGHTER"
+    }
+  ],
+  "otherPolicies": [
+    {
+      "name": "Motor Policy 1",
+      "premium": 5000,
+      "isAnnual": true
+    },
+    {
+      "name": "Motor Policy 2",
+      "premium": 6000,
+      "isAnnual": true
+    }
+  ],
+  "addOns": [
+    {
+      "name": "My Health Critical Illness",
+      "sumInsured": 100000
+    }
+  ]
+}
+class PremiumCalculator:
+	//constructor
+	function __init__(premiumCalculatorRequest:PremiumCalculatorRequest):
+		self.premiumCalculatorRequest = PremiumCalculatorRequest
+		
+	function calculateProductPremium():
+		/* Create the rule engine instance using the required DT,pass the ProductPremium in the rule engine as a fact holder, use the 				productPremiumResponse */
+	function calculateProductPremiumDiscount():
+		/* Create the rule engine instance using the required DT,pass the DiscountOnProductPremium in the rule engine as a fact holder, use the 				discountProductPremiumResponse */
+	function applicableRiders():
+		/* code the logic to return all applicable riders */
+	function calculateRiderPremium():
+		/* Create the rule engine instance using the required DT,pass the RiderPremium in the rule engine as a fact holder, use the riderPremiumResponse */
+	function calculateRiderPremiumDiscount():
+		/* Create the rule engine instance using the required DT,pass the DiscountOnProductPremium in the rule engine as a fact holder, use the 				discountProductPremiumResponse */
+	

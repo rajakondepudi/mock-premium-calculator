@@ -1,0 +1,245 @@
+import { Injectable } from "@nestjs/common";
+import { AddOnPremium } from "./addon-premium";
+import { ProductDetails, ProductPremiumDetails } from "./dto";
+import { ProductPremium } from "./product-premium";
+@Injectable()
+export class PremiumCalculator {
+    private premiumCalculatorRequest: ProductDetails;
+    private premiumCalculatorResponse: ProductPremiumDetails
+
+    async calculatePremium(premiumCalculatorRequest: ProductDetails):Promise<ProductPremiumDetails>{
+        this.premiumCalculatorRequest = premiumCalculatorRequest
+        this.premiumCalculatorResponse = new ProductPremiumDetails()
+        this.initializeResponse();
+
+        await this.productPremiumCalculation();
+        await this.cumulativeDiscountApplication();
+        await this.commonPolicyDiscountCalculation();
+        await this.addonPremiumCalculation();
+        await this.addonCumulativeDiscountApplication();
+        await this.addonCommonPolicyDiscountCalculation();
+        return this.premiumCalculatorResponse;
+    }
+
+    private initializeResponse() {
+        /* This function initializes the response structure for incoming request */
+
+        /* Product premium object initialization started */
+        this.premiumCalculatorResponse.productName = this.premiumCalculatorRequest.name
+        this.premiumCalculatorResponse.sumInsured = this.premiumCalculatorRequest.sumInsured
+        this.premiumCalculatorResponse.totalGrossPremium = 0
+        this.premiumCalculatorResponse.totalLineDiscount = 0
+        this.premiumCalculatorResponse.totalCumulativeDiscount = 0
+        this.premiumCalculatorResponse.totalNetPremium = 0
+        this.premiumCalculatorResponse.memberDetails = this.premiumCalculatorRequest.members.map(member => {
+            return {
+                "member": member.relation,
+                "age": member.age,
+                "grossPremium": 0,
+                "lineDiscountPercent": 0,
+                "lineDiscount": 0,
+                "netPremium": 0
+            }
+        })
+        this.premiumCalculatorResponse.cumulativeDiscounts = [];
+        let primaryInsured = {
+            "member": "SELF",
+            "age": this.premiumCalculatorRequest.primaryInsured.age,
+            "grossPremium": 0,
+            "lineDiscountPercent": 0,
+            "lineDiscount": 0,
+            "netPremium": 0
+        };
+        this.premiumCalculatorResponse.memberDetails.push(primaryInsured);
+
+
+
+        /* Addon validated & object initialized, if present */
+        if (this.premiumCalculatorRequest.addOns && this.premiumCalculatorRequest.addOns.length > 0) {
+            this.premiumCalculatorResponse.addons = this.premiumCalculatorRequest.addOns.map(addOn => {
+                return {
+                    "name": addOn.name,
+                    "sumInsured": addOn.sumInsured,
+                    "totalGrossPremium": 0,
+                    "totalLineDiscount": 0,
+                    "totalCumulativeDiscount": 0,
+                    "totalNetPremium": 0,
+                    "memberDetails": [],
+                    "cumulativeDiscounts": []
+                }
+            })
+        }
+
+        /* Product premium object initialization completed */
+    }
+
+    private async  productPremiumCalculation() {
+        /* This function will calculate premium for each member */
+
+        let request = {
+            "sumInsured": this.premiumCalculatorRequest.sumInsured,
+            "cityType": this.premiumCalculatorRequest.cityType,
+            "premiumForAges": [this.premiumCalculatorRequest.primaryInsured.age, ...this.premiumCalculatorRequest.members.map(member => member.age)] //distinct age to be passed
+        }
+        let productPremium = new ProductPremium(request);
+        //productPremium wil be passed in rule engine as a fact before calling getPremiumResponse function
+
+        let premiums = await productPremium.getPremiumResponse() //Premium returned from DT
+
+        //updating premium for each member
+        this.premiumCalculatorResponse.memberDetails.forEach((member) => {
+            let premiumIndex = premiums.findIndex(premium => member.age == premium.age)
+            if (premiumIndex > -1)
+                member.grossPremium = premiums[premiumIndex].premium * this.premiumCalculatorRequest.tenure // total premium based on tenure
+            member.netPremium = member.grossPremium  // net premium also initialized
+            this.premiumCalculatorResponse.totalGrossPremium += member.grossPremium
+        })
+        this.premiumCalculatorResponse.totalNetPremium = this.premiumCalculatorResponse.totalGrossPremium
+
+    }
+
+    private async cumulativeDiscountApplication() {
+        // This function will calculate discount based on policy type. Ex- INDIVIDUAL,FLOATER
+        switch (this.premiumCalculatorRequest.policyType) {
+            case "INDIVIDUAL":
+                if (this.premiumCalculatorRequest.members.length > 2) {
+                    // DT will be called to fetch discount percentage based on product name for INDIVIDUAL policy type
+                    this.premiumCalculatorResponse.cumulativeDiscounts.push({
+                        "type": "FAMILY_DISCOUNT",
+                        "percent": 10,
+                        "amount": 0
+                    })
+                }
+                break;
+
+            default: // for FLOATER
+                //discount for floater policy type to be implemented here based on payload updated by DT for product defined within floater policy 
+                break;
+        }
+
+        // DT will return long term discount based on tenure and product name
+        this.premiumCalculatorResponse.cumulativeDiscounts.push({
+            "type": "LONG_TERM",
+            "percent": 7.5,
+            "amount": 0
+        })
+
+        if (this.premiumCalculatorRequest.isOnline === true) {
+            // DT will return cumulative discounts based on product name
+            this.premiumCalculatorResponse.cumulativeDiscounts.push({
+                "type": "ONLINE",
+                "percent": 5,
+                "amount": 0
+            })
+            if (this.premiumCalculatorRequest.primaryInsured.isEmployee === true) {
+                this.premiumCalculatorResponse.cumulativeDiscounts.push({
+                    "type": "EMPLOYEE",
+                    "percent": 5,
+                    "amount": 0
+                })
+            }
+        }
+        // if other policy present the 2.5 percent discount on minimum active premium
+        //note:- clarity is still pending on "Will there be any priorities defined for applicability of discount not to be more than 20% ?" query already raised with Angad
+
+    }
+
+    private async commonPolicyDiscountCalculation() {
+        //Calculation of cumulative discounts
+        this.premiumCalculatorResponse.cumulativeDiscounts.forEach(discount => {
+            discount.amount = (this.premiumCalculatorResponse.totalGrossPremium * discount.percent * 0.01);
+        })
+        this.premiumCalculatorResponse.totalCumulativeDiscount = +(this.premiumCalculatorResponse.cumulativeDiscounts.reduce((n, {amount}) => n + amount, 0)).toFixed(2) //summation of cumulative discounts       
+        this.premiumCalculatorResponse.totalNetPremium = this.premiumCalculatorResponse.totalGrossPremium - this.premiumCalculatorResponse.totalCumulativeDiscount
+    }
+
+    private async addonPremiumCalculation(){
+
+        for (let index = 0; index < this.premiumCalculatorRequest.addOns.length; index++) {
+        
+            /* This function will calculate addon premium for each member */
+            let primaryInsured = {"relation":"SELF", ...this.premiumCalculatorRequest};
+            let request = {
+                "sumInsured": this.premiumCalculatorRequest.addOns[index].sumInsured,
+                "tenure": this.premiumCalculatorRequest.tenure,
+                "members": [...this.premiumCalculatorRequest.members, primaryInsured]
+            }
+            let addOnPremium = new AddOnPremium(request);
+            //addOnPremium wil be passed in rule engine as a fact before calling getPremiumResponse function
+
+            let premiums = await addOnPremium.getPremiumResponse() //Premium returned from DT
+            if(premiums.linePremiums.length){ 
+                premiums.linePremiums.forEach(premium => {
+                    let linePremium = premium.premium;
+                    this.premiumCalculatorResponse.addons[index].totalGrossPremium += linePremium;
+                    this.premiumCalculatorResponse.addons[index].memberDetails.push({
+                        "member": premium.relation,
+                        "age": premium.age,
+                        "grossPremium": premium.premium,
+                        "lineDiscountPercent": 0,
+                        "lineDiscount": 0,
+                        "netPremium": premium.premium
+                    })
+                });
+                this.premiumCalculatorResponse.addons[index].totalNetPremium = this.premiumCalculatorResponse.addons[index].totalGrossPremium
+            }   // calculate the line premium if applicable/exist
+
+            if(premiums.cumulativePremium){} // calculate the cumulative premium if applicable/exist
+        }
+
+    }
+
+    private async addonCumulativeDiscountApplication(){
+        
+        for (let index = 0; index < this.premiumCalculatorRequest.addOns.length; index++) {
+            // currently response is hardcoded for My Health CI Plan:1:9 Illness
+            // This function will calculate discount based on policy type. Ex- INDIVIDUAL,FLOATER
+            switch (this.premiumCalculatorRequest.policyType) {
+                case "INDIVIDUAL":
+                    if (this.premiumCalculatorRequest.members.length > 2) {
+                        // DT will be called to fetch discount percentage based on product name for INDIVIDUAL policy type
+                        this.premiumCalculatorResponse.addons[index].cumulativeDiscounts.push({
+                            "type": "FAMILY_DISCOUNT",
+                            "percent": 10,
+                            "amount": 0
+                        })
+                    }
+                    break;
+
+                default: // for FLOATER
+                    //discount for floater policy type to be implemented here based on payload updated by DT for addon defined within product 
+                    break;
+            }
+
+            // DT will return long term discount based on tenure and addon name, push the discount if cumulative discounts are not exceeding more than 20%
+
+            // DT will return cumulative discounts based on addon name, push the discount if cumulative discounts are not exceeding more than 20%
+
+            if (this.premiumCalculatorRequest.primaryInsured.isEmployee === true) {
+                this.premiumCalculatorResponse.addons[index].cumulativeDiscounts.push({
+                    "type": "EMPLOYEE",
+                    "percent": 10,
+                    "amount": 0
+                })
+            }
+
+            // if other policy present the 10 percent discount on minimum active premium
+
+            //note:- clarity is still pending on "Will there be any priorities defined for applicability of discount not to be more than 20% ?" query already raised with Angad
+        }
+    }
+
+    private async addonCommonPolicyDiscountCalculation() {
+        for (let index = 0; index < this.premiumCalculatorResponse.addons.length; index++) {
+
+            //Calculation of cumulative discounts
+            this.premiumCalculatorResponse.addons[index].cumulativeDiscounts.forEach(discount => {
+                discount.amount = ( this.premiumCalculatorResponse.addons[index].totalGrossPremium * discount.percent * 0.01);
+            })
+            this.premiumCalculatorResponse.addons[index].totalCumulativeDiscount = +(this.premiumCalculatorResponse.addons[index].cumulativeDiscounts.reduce((n, {amount}) => n + amount, 0)).toFixed(2) //summation of cumulative discounts       
+            this.premiumCalculatorResponse.addons[index].totalNetPremium =  this.premiumCalculatorResponse.addons[index].totalGrossPremium - this.premiumCalculatorResponse.addons[index].totalCumulativeDiscount
+        }
+
+    }
+
+}
