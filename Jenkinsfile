@@ -1,6 +1,7 @@
 pipeline {
     agent any
     
+    
     stages {
         stage('Checkout') {
             steps {
@@ -9,12 +10,10 @@ pipeline {
         }
     stage('Build') {
             steps {
-                script {
-                    // Install dependencies
+                   
                     sh 'npm install'
                     
-                    // Build the code
-                    sh 'npm run build'
+                
                 }
             }
         }
