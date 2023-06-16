@@ -13,7 +13,13 @@ pipeline {
         }
         stage('Build') {
             steps { 
-                    sh 'npm clean'
+                    // Clean npm cache
+                    sh 'npm cache clean --force'
+                
+                    // Clean node_modules directory
+                    sh 'rm -rf node_modules'
+                
+                    // Install npm dependencies
                     sh 'npm install'
                    }
                   }
