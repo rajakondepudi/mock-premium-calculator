@@ -8,14 +8,14 @@ pipeline {
                 git branch: 'main', credentialsId: 'jenkins', url: 'https://github.com/rajakondepudi/mock-premium-calculator.git'
             }
         }
-    stage('Build') {
+        stage('Build') {
             steps {
                     sh 'npm install'
                    }
                   }
-    stage('Test') {
-                    steps {
-                        sh './jenkins/scripts/test.sh'
+        stage('Test') {
+            steps {
+                     sh 'npm test'
                     }
                 }
         
