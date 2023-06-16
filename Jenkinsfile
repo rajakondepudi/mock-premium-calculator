@@ -29,6 +29,11 @@ pipeline {
                      sh 'npm ci'
                      sh 'npm run test'
                     }
+            post {
+               always {
+                   junit 'output/coverage/junit/junit.xml'
+                     }
+                 }
                 }
         
         
