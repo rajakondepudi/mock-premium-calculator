@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                 git branch: 'main', credentialsId: 'jenkins', url: 'https://github.com/your-username/your-repo.git'
+                 git branch: 'main', git credentialsId: 'jenkins', url: 'https://github.com/rajakondepudi/mock-premium-calculator.git'
             }
         }
         
