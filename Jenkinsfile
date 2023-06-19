@@ -46,15 +46,6 @@ pipeline {
                 }
             
            }
-
-         post 
-              {
-                failure 
-                  {
-                   mail to: 'rjkondepudi@gmail.com', subject: 'Build Failed: ${currentBuild.fullDisplayName}', body: '''
-                   The build has failed. Please review the build details at ${env.BUILD_URL} '''
-                    
-                   }
-              }
     }
+
 }
