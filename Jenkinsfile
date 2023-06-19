@@ -31,16 +31,16 @@ pipeline {
                      sh 'npm run test'
                     }
                 }
-        stage('SonarQube analysis') {
-      steps {
-        script {
-         
-          withSonarQubeEnv('SonarQube Scanner')
+        stage('SonarQube analysis') 
+        {
+          steps 
             {
-            sh "${scannerHome}/bin/sonar-scanner"
-          }
-        }
-      }
+             script 
+                {
+                  withSonarQubeEnv('SonarQube Scanner')
+                  sh "${scannerHome}/bin/sonar-scanner"
+                }
+            
     
         }  
         }
