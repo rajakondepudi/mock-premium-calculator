@@ -46,6 +46,16 @@ pipeline {
                 }
             
            }
+        stage('Build Docker Image') 
+           {
+            steps
+               {
+                script 
+                 {
+                    docker.build('nodejs:latest', '-f Dockerfile .')
+                 }
+               }
+          }
     }
 
 }
