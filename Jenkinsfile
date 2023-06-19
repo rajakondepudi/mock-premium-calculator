@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools {
         nodejs '18.16.0'
+         scannerHome 'sonarjenkins'
           } 
     
     
@@ -33,7 +34,7 @@ pipeline {
         stage('SonarQube analysis') {
       steps {
         script {
-          scannerHome = tool 'SonarQube Scanner 2.8'
+         
           withSonarQubeEnv('SonarQube Scanner')
             {
             sh "${scannerHome}/bin/sonar-scanner"
