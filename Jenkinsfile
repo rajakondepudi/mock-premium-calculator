@@ -33,7 +33,7 @@ pipeline {
            }
         stage('Build') 
            {
-            stepss
+            steps
                { 
                    // Clean npm cache
                    sh 'npm cache clean --force'
@@ -45,7 +45,9 @@ pipeline {
                     sh 'npm install'
                 }
             
-            post 
+           }
+
+         post 
               {
                 failure 
                   {
@@ -54,7 +56,5 @@ pipeline {
                     
                    }
               }
-           }
-
-        }
+    }
 }
