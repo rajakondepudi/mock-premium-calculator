@@ -32,7 +32,7 @@ pipeline {
                 }
         stage("Sonarqube Analysis") {
             steps {
-                nodejs(nodeJSInstallationName: '18.16.0')
+                //nodejs(nodeJSInstallationName: '18.16.0')
                 script {
                     withSonarQubeEnv('soanr') 
                     {
