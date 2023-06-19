@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         nodejs '18.16.0'
-         scannerHome 'sonar'
+        
         
           } 
     
@@ -36,7 +36,7 @@ pipeline {
         {
           steps 
             {
-                 
+                  scannerHome = tool 'sonar'
                   withSonarQubeEnv('sonarjenkins')
                   sh "${scannerHome}/bin/sonar-scanner"
                 }
