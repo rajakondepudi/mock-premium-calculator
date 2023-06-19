@@ -35,7 +35,7 @@ pipeline {
                 script {
                     withSonarQubeEnv(credentialsId: 'sonarjenkins') 
                     {
-                        sh 'npm run sonar'
+                        sh 'sonar-scanner'
                     }
                 }
             }
