@@ -34,7 +34,7 @@ pipeline {
             steps {
                 //nodejs(nodeJSInstallationName: '18.16.0')
                 script {
-                    withSonarQubeEnv('soanr') 
+                    withSonarQubeEnv('soanrjenkins') 
                     {
                         //sh 'npm install sonar-scanner'
                         sh 'npm run sonar'
