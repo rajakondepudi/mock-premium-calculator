@@ -44,7 +44,7 @@ pipeline {
                     // Install npm dependencies
                     sh 'npm install'
                 }
-            }
+            
             post 
               {
                 failure 
@@ -54,6 +54,7 @@ pipeline {
                     
                    }
               }
+           }
 
         }
 }
