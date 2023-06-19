@@ -33,7 +33,7 @@ pipeline {
            }
         stage('Build') 
            {
-            steps
+            stepss
                { 
                    // Clean npm cache
                    sh 'npm cache clean --force'
