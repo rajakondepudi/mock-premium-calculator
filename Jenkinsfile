@@ -32,16 +32,17 @@ pipeline {
                      sh 'npm run test'
                     }
                 }
-        stage('SonarQube analysis') 
+        stage('SonarQube Scan') 
         {
-          steps 
-            {
-               
-                  
-                  sh 'npm run sonar'
-                }
-            
-    
-        }  
+            environment {
+                // Define environment variables required for SonarQube
+                SONAR_SCANNER_HOME = tool 'sonar'
+            }
+
+            steps {
+                // Run SonarQube analysis
+                sh "${env.SONAR_SCANNER_HOME}/bin/sonar-scanner"
+            }
+        }
         }
 }
