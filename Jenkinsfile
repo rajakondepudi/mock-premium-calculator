@@ -37,8 +37,8 @@ pipeline {
           steps 
             {
                
-                  withSonarQubeEnv('sonarjenkins')
-                  sh "${scannerHome}/bin/sonar-scanner"
+                  
+                  sh 'npm run sonar'
                 }
             
     
