@@ -30,6 +30,17 @@ pipeline {
                      sh 'npm run test'
                     }
                 }
+        stage("Sonarqube Analysis") {
+            steps {
+                script {
+                    withSonarQubeEnv(credentialsId: 'sonarjenkins') 
+                    {
+                        sh 'npm run sonar'
+                    }
+                }
+            }
+
+        }
         
         }
 }
