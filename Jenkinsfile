@@ -30,13 +30,16 @@ pipeline {
                      sh 'npm run test'
                     }
                 }
-        stage('SonarQube analysis') 
-        {
-            steps{
-                    nodejs(nodeJSInstallationName: '18.6.0')
-                    sh 'npm run sonar'
-                 } 
-        }  
+        stage('SonarQube analysis') {
+      steps {
+        script {
+          def scannerHome = tool 'sonarscan';
+          withSonarQubeEnv('sonarqube') {
+            sh "${tool("sonarscan ")}/bin/sonar-scanner -Dsonar.projectKey=nodejs-app -Dsonar.projectName=nodejs-app"
+          }
+        }
+      }
+    }
         
         }
 }
