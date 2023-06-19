@@ -32,10 +32,12 @@ pipeline {
                 }
         stage("Sonarqube Analysis") {
             steps {
+                nodejs(nodeJSInstallationName: '18.16.0')
                 script {
-                    withSonarQubeEnv(credentialsId: 'sonarjenkins') 
+                    withSonarQubeEnv('soanr') 
                     {
-                        sh 'sonar-scanner'
+                        sh 'npm install sonar-scanner'
+                        sh 'npm run sonar'
                     }
                 }
             }
