@@ -33,11 +33,8 @@ pipeline {
         stage('SonarQube analysis') 
         {
             steps{
-                    def scannerHome = tool 'SonarScanner 4.0';
-                    withSonarQubeEnv('My SonarQube Server') 
-                      { 
-                        sh "${scannerHome}/bin/sonar-scanner"
-                      }
+                    nodejs(nodeJSInstallationName: '18.6.0')
+                    sh 'npm run sonar'
                  } 
         }  
         
