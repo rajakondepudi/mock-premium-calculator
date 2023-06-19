@@ -36,7 +36,7 @@ pipeline {
                 script {
                     withSonarQubeEnv('soanr') 
                     {
-                        sh 'npm install sonar-scanner'
+                        //sh 'npm install sonar-scanner'
                         sh 'npm run sonar'
                     }
                 }
