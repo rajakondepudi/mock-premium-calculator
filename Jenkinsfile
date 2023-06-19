@@ -30,19 +30,14 @@ pipeline {
                      sh 'npm run test'
                     }
                 }
-        stage("Sonarqube Analysis") {
-            steps {
-                //nodejs(nodeJSInstallationName: '18.16.0')
-                script {
-                    withSonarQubeEnv('soanrjenkins') 
-                    {
-                        //sh 'npm install sonar-scanner'
-                        sh 'npm run sonar'
-                    }
-                }
+        stage('SonarQube analysis') 
+        {
+          def scannerHome = tool 'SonarScanner 4.0';
+          withSonarQubeEnv('My SonarQube Server') 
+            { 
+              sh "${scannerHome}/bin/sonar-scanner"
             }
-
-        }
+         }
         
         }
 }
