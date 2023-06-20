@@ -61,7 +61,7 @@ pipeline {
                {
                 script 
                  {
-                   app = docker.build("${registry}/nodejs:latest")
+                   app = docker.build("gcr.io/${registry}/nodejs:latest")
 
                  }
                }
