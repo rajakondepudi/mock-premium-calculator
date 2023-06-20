@@ -3,12 +3,7 @@ pipeline {
     tools {
             nodejs '18.16.0'
           } 
-    environment 
-         {
-           imageName = 'gcr.io/	compact-cursor-389906/nodejs'
-           imageTag = "latest"
-           gcrCredentials = 'compact-cursor'
-         }
+    
     stages {
         stage('Checkout') 
            {
@@ -58,25 +53,13 @@ pipeline {
                {
                 script 
                  {
-                   docker.build("${imageName}:${imageTag}", "-f Dockerfile .")
+                   docker.build('nodejs:latest', '-f Dockerfile .')
 
                  }
                }
           }
-        stage('Push Docker Image to GCR') 
-           {
-            steps 
-               {
-                script 
-                   {
-                      withCredentials([file(credentialsId: gcrCredentials, variable: 'GCR_KEY')]) 
-                       {
-                        sh "gcloud auth activate-service-account --key-file=${GCR_KEY}"
-                       }
-                        sh "docker push ${imageName}:${imageTag}"
-                    }
-                }
-           }  
+        
+           
     }
 
 }
