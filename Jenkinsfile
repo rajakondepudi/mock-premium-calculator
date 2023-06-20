@@ -3,6 +3,10 @@ pipeline {
     tools {
             nodejs '18.16.0'
           } 
+    environment 
+               {
+                credentials-id = 'compact-cursor'
+               }
     
     stages {
         stage('Checkout') 
@@ -65,10 +69,7 @@ pipeline {
           }
         stage('Push Image To GCR') 
            {
-               environment 
-               {
-                credentials-id = 'compact-cursor'
-               }
+               
                steps
                {
                    script
