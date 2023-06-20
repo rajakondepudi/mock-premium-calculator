@@ -34,6 +34,7 @@ pipeline {
            }
         stage('Build') 
            {
+               
             steps
                { 
                    // Clean npm cache
@@ -49,11 +50,15 @@ pipeline {
            }
         stage('Build Docker Image') 
            {
+                environment 
+               {
+                registry = 'compact-cursor-389906'
+               }
             steps
                {
                 script 
                  {
-                   docker.build('nodejs:latest', '-f Dockerfile .')
+                   app = docker.build("registry/nodejs:latest")
 
                  }
                }
