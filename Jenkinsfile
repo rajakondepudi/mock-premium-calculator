@@ -58,7 +58,8 @@ pipeline {
                {
                 script 
                  {
-                   docker.build(imageName, "-t ${imageName}:${imageTag} .")
+                   docker.build("${imageName}", "-t ${imageName}:${imageTag} .")
+
                  }
                }
           }
