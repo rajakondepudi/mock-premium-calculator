@@ -68,6 +68,11 @@ pipeline {
           }
         stage('Push Image To GCR') 
            {
+                environment 
+               {
+                registry = 'compact-cursor-389906'
+                credentialsId = 'compact-cursor'
+               }
               steps 
                  {
                    script 
