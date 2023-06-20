@@ -5,7 +5,7 @@ pipeline {
           } 
     environment 
                {
-                credentials-id = 'compact-cursor'
+                credentialsId = "compact-cursor-389906"
                }
     
     stages {
@@ -74,7 +74,7 @@ pipeline {
                {
                    script
                    {
-                     docker.withRegistry('https://eu.gcr.io', 'gcr:[credentials-id]') 
+                     docker.withRegistry('https://eu.gcr.io', 'gcr:[credentialsId]') 
                       {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
