@@ -53,7 +53,7 @@ pipeline {
                 environment 
                {
                 registry = 'compact-cursor-389906'
-                credentialsId = 'compact-cursor'
+                credentials = 'compact-cursor'
                }
     
                
@@ -71,13 +71,13 @@ pipeline {
                 environment 
                {
                 registry = 'compact-cursor-389906'
-                credentialsId = 'compact-cursor'
+                credentials = 'compact-cursor'
                }
               steps 
                  {
                    script 
                      {
-                       docker.withRegistry('https://gcr.io', 'compact-cursor')
+                       docker.withRegistry('https://gcr.io', credentialsId: 'credentials')
                          {
                             app.push("${registry}/nodejs:latest")
                           }
