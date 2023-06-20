@@ -58,7 +58,7 @@ pipeline {
                {
                 script 
                  {
-                   docker.build(imageName, "--build-arg IMAGE_TAG=${imageTag} .")
+                   docker.build(${imageName}:${imageTag}, '-f Dockerfile .')
                  }
                }
           }
