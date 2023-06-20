@@ -5,7 +5,7 @@ pipeline {
           } 
     environment 
                {
-                credentialsId = "compact-cursor"
+                credentialsId = 'compact-cursor'
                }
     
     stages {
@@ -69,19 +69,16 @@ pipeline {
           }
         stage('Push Image To GCR') 
            {
-               
-               steps
-               {
-                   script
-                   {
-                     docker.withRegistry('https://eu.gcr.io', 'gcr:[credentialsId]') 
-                      {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                      }
-                    }
-               }
-           }
+              steps 
+                 {
+                   script 
+                     {
+                       docker.withRegistry('https://gcr.io', 'gcr:credentialsId') {
+                       dockerImage.push()
+                     }
+                 }
+            }
+           
         
            
     }
