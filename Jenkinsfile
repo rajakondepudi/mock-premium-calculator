@@ -63,6 +63,19 @@ pipeline {
                  }
                }
           }
+        stage('Push Image To GCR') 
+           {
+               environment 
+               {
+                credentials-id = 'compact-cursor'
+               }
+             docker.withRegistry('https://eu.gcr.io', 'gcr:[credentials-id]') 
+               {
+                  app.push("${env.BUILD_NUMBER}")
+                  app.push("latest")
+               }
+           }
+
         
            
     }
