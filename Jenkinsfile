@@ -5,7 +5,7 @@ pipeline {
           } 
     environment 
                {
-                credentialsId = "compact-cursor-389906"
+                credentialsId = "compact-cursor"
                }
     
     stages {
