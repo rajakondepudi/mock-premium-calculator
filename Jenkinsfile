@@ -77,7 +77,7 @@ pipeline {
                  {
                    script 
                      {
-                       docker.withRegistry('', credentialsId) 
+                       docker.withRegistry('https://gcr.io', 'compact-cursor')
                          {
                             app.push("${registry}/nodejs:latest")
                           }
