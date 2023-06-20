@@ -3,10 +3,6 @@ pipeline {
     tools {
             nodejs '18.16.0'
           } 
-    environment 
-               {
-                credentialsId = 'compact-cursor'
-               }
     
     stages {
         stage('Checkout') 
@@ -57,12 +53,15 @@ pipeline {
                 environment 
                {
                 registry = 'compact-cursor-389906'
+                credentialsId = 'compact-cursor'
                }
+    
+               
             steps
                {
                 script 
                  {
-                   app = docker.build("registry/nodejs:latest")
+                   app = docker.build("${registry}/nodejs:latest")
 
                  }
                }
@@ -73,15 +72,14 @@ pipeline {
                  {
                    script 
                      {
-                       docker.withRegistry('https://gcr.io', credentialsId) 
+                       docker.withRegistry('', credentialsId) 
                          {
-                           dockerImage.push()
-                         }
-                     }
+                            app.push("${registry}/nodejs:latest")
+                          }
+                      }
+           
                 }
-           
            }
-           
     }
 
 }
