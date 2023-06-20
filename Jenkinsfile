@@ -73,7 +73,7 @@ pipeline {
                  {
                    script 
                      {
-                       docker.withRegistry('https://gcr.io', 'credentialsId') 
+                       docker.withRegistry('https://gcr.io', credentialsId) 
                          {
                            dockerImage.push()
                          }
