@@ -9,7 +9,7 @@ pipeline {
           registryCredential = 'jenkinsdocker'
           dockerImage = ''
           PROJECT_ID = 'compact-cursor-389906'
-          CLUSTER_NAME = 'k8s-cluster'
+          CLUSTER_NAME = 'k8s-cluster1'
           LOCATION = 'asia-east1'
           CREDENTIALS_ID = 'kubernetes'
         }
@@ -91,14 +91,11 @@ pipeline {
                       echo "Deployment started ..."
                       sh 'ls -ltr'
                       sh 'pwd'
-                      sh "sed -i 's/pipeline:latest/pipeline:${env.BUILD_ID}/g' deployment.yml"
-                      step([$class: 'KubernetesEngineBuilder', \
-                      projectId: env.PROJECT_ID, \
-                      clusterName: env.CLUSTER_NAME, \
-                      location: env.LOCATION, \
-                      manifestPattern: 'deployment.yml', \
-                      credentialsId: env.CREDENTIALS_ID, \
-                      verifyDeployments: true])
+                      sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deployment.yml"
+                      step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                             
+                                            
+                      
                   }
                }
             }    
