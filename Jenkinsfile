@@ -50,44 +50,15 @@ pipeline {
            }
         stage('Build Docker Image') 
            {
-                environment 
-               {
-                registry = 'compact-cursor-389906'
-                credentials = 'gcrkey'
-               }
-    
-               
             steps
                {
                 script 
                  {
-                   app = docker.build("gcr.io/${registry}/nodejs:latest")
-
+                   sh 'docker build -t nodejs:$BUILD_NUMBER .'
                  }
                }
           }
-        stage('Push Image To GCR') 
-           {
-                environment 
-               {
-                registry = 'compact-cursor-389906'
-                credentials = 'gcrkey'
-               }
-              steps 
-                 {
-                   script 
-                     {
-                         withCredentials(credentialsId: credentials, url: 'https://gcr.io') 
-                         {
-                            docker.withRegistry('https://gcr.io', 'credentials')
-                         {
-                            app.push("${registry}/nodejs:latest")
-                          }
-                         }
-            
-                     }
-                 }
-           }
+        
     }
 
 }
