@@ -53,7 +53,7 @@ pipeline {
                 environment 
                {
                 registry = 'compact-cursor-389906'
-                credentials = 'compact-cursor'
+                credentials = 'gcrkey'
                }
     
                
@@ -71,7 +71,7 @@ pipeline {
                 environment 
                {
                 registry = 'compact-cursor-389906'
-                credentials = 'compact-cursor'
+                credentials = 'gcrkey'
                }
               steps 
                  {
