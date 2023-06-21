@@ -58,7 +58,7 @@ pipeline {
                {
                 script 
                  {
-                   sh 'docker build -t nodejs:$BUILD_NUMBER .'
+                   dockerImage = docker.build('nodejs:$BUILD_NUMBER')
                  }
                }
           }
@@ -68,15 +68,14 @@ pipeline {
                {
                 script 
                  {
-                   //docker login
-                   sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                   //push image
-                   sh 'docker push nodejs:$BUILD_NUMBER'
+                  docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) 
+                     {
+                      dockerImage.push()
+                     }
                  }
                }
-          }
         
-    }
+            }
       post
     {
         always
