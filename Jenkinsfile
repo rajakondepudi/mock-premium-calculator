@@ -5,7 +5,9 @@ pipeline {
           } 
     environment
         {
-          DOCKERHUB_CREDENTIALS = credentials('jenkinsdocker')
+          registry = "rajakonde/nodejs-app"
+          registryCredential = 'jenkinsdocker'
+          dockerImage = ''
         }
     
     stages {
@@ -58,7 +60,7 @@ pipeline {
                {
                 script 
                  {
-                   dockerImage = docker.build('nodejs:$BUILD_NUMBER')
+                   dockerImage = docker.build registry + ":$BUILD_NUMBER"
                  }
                }
           }
@@ -68,13 +70,12 @@ pipeline {
                {
                 script 
                  {
-                  docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) 
+                  docker.withRegistry( '', registryCredential )  
                      {
-                      dockerImage.push()
-                     }
+                        dockerImage.push()
+                      }
                  }
                }
-        
             }
       post
     {
