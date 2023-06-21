@@ -81,7 +81,7 @@ pipeline {
                  }
                }
             }
-        stage('Deploy to K8s') 
+        stage('Deploy to Gke Cluster') 
            {
             steps
                {
