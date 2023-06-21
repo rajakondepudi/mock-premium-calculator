@@ -3,6 +3,10 @@ pipeline {
     tools {
             nodejs '18.16.0'
           } 
+    environment
+        {
+          DOCKERHUB_CREDENTIALS = credentials('jenkinsdocker')
+        }
     
     stages {
         stage('Checkout') 
@@ -58,7 +62,27 @@ pipeline {
                  }
                }
           }
+        stage('Publish Docker Image') 
+           {
+            steps
+               {
+                script 
+                 {
+                   //docker login
+                   sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                   //push image
+                   sh 'docker push nodejs:$BUILD_NUMBER'
+                 }
+               }
+          }
         
+    }
+      post
+    {
+        always
+        {
+            sh 'docker logout'
+        }
     }
 
 }
