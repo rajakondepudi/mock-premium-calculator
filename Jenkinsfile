@@ -26,7 +26,7 @@ pipeline {
            {
             steps 
                {
-                  sh 'npm ci'
+                  //sh 'npm ci'
                   sh 'npm run test'
                }
             }
