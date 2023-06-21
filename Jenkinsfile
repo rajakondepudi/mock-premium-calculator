@@ -77,13 +77,16 @@ pipeline {
                  {
                    script 
                      {
-                       docker.withRegistry('https://gcr.io', credentialsId: 'credentials')
+                         withDockerRegistry([credentialsId: 'credentials', url: 'https://gcr.io']) 
+                         {
+                            docker.withRegistry('https://gcr.io', credentialsId: 'credentials')
                          {
                             app.push("${registry}/nodejs:latest")
                           }
-                      }
-           
-                }
+                         }
+            
+                     }
+                 }
            }
     }
 
