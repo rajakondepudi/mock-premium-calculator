@@ -17,8 +17,7 @@ spec:
           image: rajakonde/nodejs-app:tagversion
           ports:
             - containerPort: 3000
-          workingDir: /usr/src/app
-          command: ["node", "main.ts"]
+          
           
 ---
 
@@ -28,10 +27,10 @@ metadata:
   name: nodeapp-service
 spec:
   selector:
-    app: nodeapp 
-  type: LoadBalancer
+    app: nodeapp
   ports:
-  - protocol: TCP
-    port: 5000
-    targetPort: 3000
-    nodePort: 3000          
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer
+        
