@@ -1,7 +1,10 @@
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   name: nodeapp
+  namespace: default
+  lables:
+    app: nodeapp
 spec:
   replicas: 1
   selector:
@@ -14,22 +17,20 @@ spec:
     spec:
       containers:
         - name: nodeapp
-          image: rajakonde/nodejs-app:tagversion
+          image: "rajakonde/nodejs-app:tagversion"
           ports:
             - containerPort: 3000
-          
-          
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
   name: nodeapp
+  namespace: default
 spec:
   selector:
     app: nodeapp
   ports:
-    - protocol: TCP
+    - protocol: http
       port: 80
       targetPort: 3000
   type: LoadBalancer
