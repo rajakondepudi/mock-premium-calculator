@@ -20,8 +20,8 @@ spec:
           image: "rajakonde/nodejs-app:tagversion"
           ports:
             - containerPort: 3000
-       imagePullSecrets:
-         - name: 'jenkinsdocker'
+      imagePullSecrets:
+        - name: 'jenkinsdocker'
 ---
 apiVersion: v1
 kind: Service
