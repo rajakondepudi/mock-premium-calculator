@@ -11,10 +11,11 @@ COPY package*.json ./
 RUN npm install
 # If you are building your code for production
 # RUN npm ci --omit=dev
+RUN npm install ts-node --save-dev
 
 # Bundle app source
 # Bundle app source
 COPY . .
 
 EXPOSE 3000
-CMD [ "node", "main.ts" ]
+CMD [ "ts-node", "main.ts" ]
