@@ -1,4 +1,6 @@
 FROM node:18-alpine
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -17,5 +19,6 @@ RUN npm ci --only=production
 
 RUN npm run build
 
-EXPOSE 3000
-CMD [ "node", "main.ts" ]
+ENV PORT 3000
+ENV PORT 9229
+CMD [ "node", "dist/main" ]
