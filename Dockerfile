@@ -10,7 +10,7 @@ COPY package*.json ./
 
 Run npm install
 
-RUN npm install ts-node --save-dev
+RUN npm ci --only=production
 
 # Bundle app source
 # Bundle app source
