@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: nodeapp
   namespace: default
-  lables:
+  labels:
     app: nodeapp
 spec:
   replicas: 1
@@ -30,7 +30,7 @@ spec:
   selector:
     app: nodeapp
   ports:
-    - protocol: tcp
+    - protocol: TCP
       port: 80
       targetPort: 3000
   type: LoadBalancer
