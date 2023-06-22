@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY . .
 
-RUN npm install
+Run 'npm install -g npm@9.7.2`
 # If you are building your code for production
 # RUN npm ci --omit=dev
 RUN npm install ts-node --save-dev
