@@ -14,7 +14,7 @@ RUN npm install
 
 # Bundle app source
 # Bundle app source
-COPY ..
+COPY . .
 
 EXPOSE 3000
 CMD [ "node", "main.ts" ]
