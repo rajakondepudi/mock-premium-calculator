@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 COPY package*.json ./
+COPY . .
 
 RUN npm install
 # If you are building your code for production
@@ -15,7 +16,7 @@ RUN npm install ts-node --save-dev
 
 # Bundle app source
 # Bundle app source
-COPY . .
+
 
 EXPOSE 3000
 CMD [ "ts-node", "main.ts" ]
