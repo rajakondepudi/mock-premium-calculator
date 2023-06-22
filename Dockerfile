@@ -18,4 +18,4 @@ RUN npm ci --only=production
 RUN npm run build
 
 EXPOSE 3000
-CMD [ "node", "main" ]
+CMD [ "node", "main.ts" ]
