@@ -13,7 +13,8 @@ RUN npm install
 # RUN npm ci --omit=dev
 
 # Bundle app source
-COPY . .
+# Bundle app source
+COPY ./src/usr ./src/usr
 
 EXPOSE 3000
-CMD [ "node", "main.ts" ]
+CMD [ "node", "src/usr/main.ts" ]
