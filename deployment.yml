@@ -21,7 +21,7 @@ spec:
           ports:
             - containerPort: 3000
       imagePullSecrets:
-        - name: 'jenkinsdocker'
+        - name: 'registryCredential'
 ---
 apiVersion: v1
 kind: Service
