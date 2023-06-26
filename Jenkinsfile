@@ -6,7 +6,7 @@ pipeline {
     environment
         {
           registry = "rajakonde/nodejs-app"
-          registryCredential = 'jenkinsdocker'
+          registryCredential = 'jenkinsdocker1'
           dockerImage = ''
           PROJECT_ID = 'compact-cursor-389906'
           CLUSTER_NAME = 'k8s-cluster1'
